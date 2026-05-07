@@ -30,16 +30,16 @@ The game is played in a single window and controlled entirely through the keyboa
 
 ## The Entities
 
-- **Teal Square (You):** This is your character. Keep moving to stay alive!
+- **Electric Blue Square (You):** This is your character. Keep moving to stay alive!
 - **Gold Square (Food):** Restores your **Hunger** by 20 points and awards 10 points to your score. 
 - **Green Square (Health Pack):** Restores your **Health** by 10 points and awards 10 points to your score.
-- **Red Square (Enemy):** These hostile entities continuously scan the grid for your location and ruthlessly pursue you. Touching them deals 20 damage! 
+- **Red Square (Enemy):** These hostile entities continuously scan the grid for your location and ruthlessly pursue you. Touching them deals 20 damage! They will also **engulf** nearby gold squares to **increase in number**, splitting into two entities whenever they feast.
 
 ## Game Rules and Mechanics
 
 1. **Hunger Depletion:** Your character's hunger starts at 100 and naturally depletes by 1 point every second as you burn energy.
 2. **Starvation:** If your hunger hits 0, you begin to starve and will lose 5 health points every second. Keep eating food (gold squares) to prevent starvation!
-3. **Enemy Spawning:** The grid starts empty, but an enemy spawns every 3 seconds at a random edge of the screen. The longer you survive, the more enemies will be on the grid!
+3. **Enemy Spawning & Multiplication:** Enemies spawn every 3 seconds at a random edge of the screen. Additionally, if an enemy reaches a gold square (food), it will consume it and split, creating a new enemy at its location.
 4. **Scoring:** The goal is to accumulate the highest score possible. You are awarded 10 points for every piece of food or health pack you pick up.
 5. **Game Over:** If your Health reaches 0, you die and the game is over. Your final score will be displayed on the screen.
 

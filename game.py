@@ -40,17 +40,18 @@ class GameState:
             return x, y
         return -1, -1
 
-    def spawn_enemy(self):
-        # Spawn enemy near the edges to avoid cheap hits
-        edge = random.choice(["top", "bottom", "left", "right"])
-        if edge == "top":
-            x, y = random.randint(0, GRID_WIDTH - 1), 0
-        elif edge == "bottom":
-            x, y = random.randint(0, GRID_WIDTH - 1), GRID_HEIGHT - 1
-        elif edge == "left":
-            x, y = 0, random.randint(0, GRID_HEIGHT - 1)
-        else:
-            x, y = GRID_WIDTH - 1, random.randint(0, GRID_HEIGHT - 1)
+    def spawn_enemy(self, x=None, y=None):
+        if x is None or y is None:
+            # Spawn enemy near the edges to avoid cheap hits
+            edge = random.choice(["top", "bottom", "left", "right"])
+            if edge == "top":
+                x, y = random.randint(0, GRID_WIDTH - 1), 0
+            elif edge == "bottom":
+                x, y = random.randint(0, GRID_WIDTH - 1), GRID_HEIGHT - 1
+            elif edge == "left":
+                x, y = 0, random.randint(0, GRID_HEIGHT - 1)
+            else:
+                x, y = GRID_WIDTH - 1, random.randint(0, GRID_HEIGHT - 1)
             
         self.enemies.append(Enemy(x, y))
 
@@ -85,7 +86,7 @@ class GameState:
         # Enemy movement and attack logic
         for enemy in self.enemies:
             if current_time - enemy.last_move_time > ENEMY_TICK_MS:
-                dx, dy = enemy.choose_move(self.player.x, self.player.y)
+                dx, dy = enemy.choose_move(self.player.x, self.player.y, self.resources)
                 
                 # Check what happens if enemy moves
                 nx, ny = enemy.x + dx, enemy.y + dy
@@ -102,9 +103,18 @@ class GameState:
                         if other != enemy and other.x == nx and other.y == ny:
                             collision = True
                             break
+                    
                     if not collision:
                         enemy.move(dx, dy, GRID_WIDTH, GRID_HEIGHT)
                         
+                        # Check for resource engulfing
+                        for res in self.resources[:]:
+                            if enemy.x == res.x and enemy.y == res.y:
+                                if res.is_food: # Gold/Yellow square
+                                    self.resources.remove(res)
+                                    # When an enemy engulfs a gold square, it multiplies at its location
+                                    self.spawn_enemy(enemy.x, enemy.y)
+                
                 enemy.last_move_time = current_time
 
         # Resource collection
